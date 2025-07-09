@@ -1,21 +1,32 @@
-//
-//  ContentView.swift
-//  new
-//
-//  Created by Артём Коротков on 09.07.2025.
-//
-
 import SwiftUI
 
 struct ContentView: View {
+    @StateObject private var taskStore = TaskStore()
+    
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+        TabView {
+            TaskListView()
+                .tabItem {
+                    Label("Tasks", systemImage: "checklist")
+                }
+            
+            StatsView()
+                .tabItem {
+                    Label("Stats", systemImage: "chart.bar.fill")
+                }
         }
-        .padding()
+        .environmentObject(taskStore)
+        .accentColor(Theme.accentColor)
+        .onAppear {
+            let appearance = UITabBarAppearance()
+            appearance.configureWithOpaqueBackground()
+            appearance.backgroundColor = UIColor(Theme.backgroundColor)
+            
+            UITabBar.appearance().standardAppearance = appearance
+            if #available(iOS 15.0, *) {
+                UITabBar.appearance().scrollEdgeAppearance = appearance
+            }
+        }
     }
 }
 
